@@ -34,7 +34,7 @@ for s_index in range(0, 226, 25):
             actor = dir_actors[1].split("/")[0][4:].strip()# 演员
         year_area_genre = extra_infos[1].strip().replace("\xa0", "")
         year, area, genre = re.match("(.+)[/]{1}(.+)[/]{1}(.+)", year_area_genre).groups()# 时间/地区/剧情
-        cursor.execute(sql % (director, actor, year, area, genre, title_zh, title_zh))
+        cursor.execute(sql % (director, actor, year, area, genre, title_zh))
         print(dir_actors)
         print(actor)
         print(year, area, genre)
