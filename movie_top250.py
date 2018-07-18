@@ -4,16 +4,16 @@ import re
 import pymysql
 
 """
-µÚÒ»Ò³:https://movie.douban.com/top250?start=0&filter
-µÚ¶þÒ³:https://movie.douban.com/top250?start=25&filter
-µÚÈýÒ³:https://movie.douban.com/top250?start=50&filter
+ç¬¬ä¸€é¡µ:https://movie.douban.com/top250?start=0&filter
+ç¬¬äºŒé¡µ:https://movie.douban.com/top250?start=25&filter
+ç¬¬ä¸‰é¡µ:https://movie.douban.com/top250?start=50&filter
 ...
 """
 url = 'https://movie.douban.com/top250?start={}&filter'
 prox = {
     "http":"202.154.27.132:8080"
 }
-sql = "insert into top250 values('%s', '%s', '%s', '%s', '%s', '%s') on duplicate key update name='%s'"
+sql = "insert into top250 values('%s', '%s', '%s', '%s', '%s', '%s')"
 # sql = "update top250 set director='%s', actor='%s', year='%s', area='%s', genre='%s', name='%s' where name='%s'"
 conn = pymysql.connect("localhost", "root", "root", "douban", charset="utf8")
 cursor = conn.cursor()
@@ -27,13 +27,13 @@ for s_index in range(0, 226, 25):
         titles = info.find_all("span")
         title_zh = titles[0].get_text()
         print(title_zh)
-        extra_infos = info.find("div", attrs={"class": "bd"}).find("p").get_text().strip().replace("'", "\\'").split("\n")  # µ¼ÑÝÑÝÔ±Àà±ð
+        extra_infos = info.find("div", attrs={"class": "bd"}).find("p").get_text().strip().replace("'", "\\'").split("\n")# å¯¼æ¼”æ¼”å‘˜ç±»åˆ«
         dir_actors = extra_infos[0].split("\xa0\xa0\xa0")
-        director = dir_actors[0].split("/")[0][4:].strip()  # µ¼ÑÝ
+        director = dir_actors[0].split("/")[0][4:].strip()# å¯¼æ¼”
         if len(dir_actors) > 1:
-            actor = dir_actors[1].split("/")[0][4:].strip()  # ÑÝÔ±
+            actor = dir_actors[1].split("/")[0][4:].strip()# æ¼”å‘˜
         year_area_genre = extra_infos[1].strip().replace("\xa0", "")
-        year, area, genre = re.match("(.+)[/]{1}(.+)[/]{1}(.+)", year_area_genre).groups()  # Ê±¼ä/µØÇø/¾çÇé
+        year, area, genre = re.match("(.+)[/]{1}(.+)[/]{1}(.+)", year_area_genre).groups()# æ—¶é—´/åœ°åŒº/å‰§æƒ…
         cursor.execute(sql % (director, actor, year, area, genre, title_zh, title_zh))
         print(dir_actors)
         print(actor)
